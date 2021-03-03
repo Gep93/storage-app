@@ -1,5 +1,13 @@
 .BucketCreate {
   background-color: white;
+  position: relative;
+}
+
+.BucketCreate::before {
+  content: "Create New Bucket";
+  position: absolute;
+  color: black;
+  top: -2vw;
 }
 
 .BucketCreate-itemsWrapper {

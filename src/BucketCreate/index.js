@@ -66,7 +66,7 @@ class BucketCreate extends Component {
   render() {
     const { bucketname, bucketlocation, bucketlocations } = this.state;
     return (
-      <div className="BucketCreate p-3 m-2">
+      <div className="BucketCreate p-3 mb-2 mt-5">
         <form onSubmit={this.handleSubmit} className="BucketCreate-form">
           <div className="BucketCreate-itemsWrapper">
             <div className="BucketCreate-formItem">

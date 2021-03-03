@@ -7,7 +7,7 @@ const BucketTable = (props) => {
   const { creatingbucket, buckets } = props;
 
   return (
-    <div className="BucketTable p-3 m-2">
+    <div className="BucketTable p-3 mt-2">
       <div className="BucketTable-options mb-3">
         <span>All Buckets ({buckets.length})</span>
         <Button
