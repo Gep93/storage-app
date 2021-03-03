@@ -1,0 +1,17 @@
+.BucketCreate {
+  background-color: lightgreen;
+}
+
+.BucketCreate-itemsWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.BucketCreate-formItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.BucketCreate-formLabel {
+  font-weight: bold;
+}

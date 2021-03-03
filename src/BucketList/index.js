@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import BucketTable from "../BucketTable/index";
+import BucketCreate from "../BucketCreate/index";
 
 import axios from "axios";
 import "./index.css";
@@ -14,6 +15,7 @@ class BucketList extends Component {
       creatingbucket: false,
     };
 
+    this.handleNewBucket = this.handleNewBucket.bind(this);
     this.fetchBuckets = this.fetchBuckets.bind(this);
   }
 
@@ -35,7 +37,7 @@ class BucketList extends Component {
   }
 
   handleNewBucket() {
-    console.log("Render new bucket component");
+    this.setState({ creatingbucket: true });
   }
 
   render() {
@@ -43,6 +45,7 @@ class BucketList extends Component {
     return (
       <div className="BucketList p-3">
         <h1>Bucket List</h1>
+        {creatingbucket && <BucketCreate />}
         <BucketTable
           creatingBucket={creatingbucket}
           newBucket={this.handleNewBucket}
