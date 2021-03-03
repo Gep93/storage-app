@@ -48,7 +48,6 @@ class BucketCreate extends Component {
       location: this.state.bucketlocation,
     });
 
-    console.log(data);
     axios
       .post(API + "buckets", data, {
         headers: {
@@ -56,11 +55,17 @@ class BucketCreate extends Component {
         },
       })
       .then((res) => {
-        console.log("response", res);
+        res.status === 201
+          ? this.handleBucketCreate()
+          : console.log("response", res);
       })
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  handleBucketCreate() {
+    this.props.handleBucketCreate();
   }
 
   render() {

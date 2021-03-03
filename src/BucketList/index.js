@@ -15,6 +15,7 @@ class BucketList extends Component {
       creatingbucket: false,
     };
 
+    this.handleBucketCreate = this.handleBucketCreate.bind(this);
     this.handleNewBucket = this.handleNewBucket.bind(this);
     this.fetchBuckets = this.fetchBuckets.bind(this);
   }
@@ -31,9 +32,15 @@ class BucketList extends Component {
         },
       })
       .then((res) => {
+        console.log("data", res.data);
         this.setState({ buckets: res.data.buckets });
       })
       .catch((err) => console.log(err));
+  }
+
+  handleBucketCreate(el) {
+    this.setState({ creatingbucket: false });
+    this.fetchBuckets();
   }
 
   handleNewBucket() {
@@ -45,7 +52,9 @@ class BucketList extends Component {
     return (
       <div className="BucketList p-3">
         <h1>Bucket List</h1>
-        {creatingbucket && <BucketCreate />}
+        {creatingbucket && (
+          <BucketCreate handleBucketCreate={this.handleBucketCreate} />
+        )}
         <BucketTable
           creatingBucket={creatingbucket}
           newBucket={this.handleNewBucket}
