@@ -1,0 +1,22 @@
+.BucketList {
+  width: 90vw;
+  align-self: center;
+  background-color: transparent;
+}
+
+.BucketList table {
+  width: 100%;
+  border: 0.3vw solid black;
+}
+
+.BucketList-inputWrapper {
+  display: flex;
+  /* flex-wrap: row wrap; */
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.BucketList-input {
+  display: flex;
+  flex-direction: column;
+}
