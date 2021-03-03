@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";
 import Button from "react-bootstrap/Button";
@@ -28,8 +29,12 @@ const BucketTable = (props) => {
         <tbody>
           {buckets.map((b) => {
             return (
-              <tr key={b.id}>
-                <td style={{ width: "70%" }}>{b.name}</td>
+              <tr className="BucketTable-tr" key={b.id}>
+                <td style={{ width: "70%" }}>
+                  <Link className="BucketTable-navLink" to="/bucket">
+                    {b.name}
+                  </Link>
+                </td>
                 <td style={{ width: "30%" }}>{b.location.name}</td>
               </tr>
             );

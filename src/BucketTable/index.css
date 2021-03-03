@@ -22,3 +22,18 @@
   background-color: #cccccc;
   border: 0.3vw solid black;
 }
+
+.BucketTable-tr:hover {
+  background-color: #cccccc;
+}
+
+.BucketTable-navLink {
+  color: black;
+  text-decoration: none;
+}
+
+.BucketTable-navLink:hover {
+  cursor: pointer;
+  color: black;
+  text-decoration: none;
+}
