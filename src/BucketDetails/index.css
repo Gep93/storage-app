@@ -1,6 +1,13 @@
 .BucketDetails {
+  position: relative;
   min-height: 15vw;
   background-color: white;
+}
+
+.BucketDetails-button {
+  position: absolute !important;
+  right: 0;
+  bottom: calc(100% + 10px);
 }
 
 .BucketDetails-dataList dd {

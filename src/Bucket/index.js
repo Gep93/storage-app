@@ -69,11 +69,6 @@ class Bucket extends Component {
     );
   }
 
-  // objects = [
-  //   { name: "File1", last_modified: "04.03.2021", size: "1kB" },
-  //   { name: "File2", last_modified: "04.03.2021", size: "1kB" },
-  // ];
-
   getFileList(evt) {
     console.log("evet", evt.target.files[0]);
   }
@@ -85,6 +80,10 @@ class Bucket extends Component {
 
   handleRenderTab(evt) {
     console.log(evt.target);
+  }
+
+  handleDelete() {
+    console.log("Delete bucket");
   }
 
   renderFiles(evt) {
@@ -125,6 +124,7 @@ class Bucket extends Component {
           <BucketDetails
             bucket={this.state.bucket}
             bucketsize={this.state.bucketsize}
+            deleteBucket={this.handleDelete}
           />
         )}
       </div>
