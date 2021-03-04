@@ -1,0 +1,9 @@
+.BucketNav {
+  background-color: white;
+}
+
+.BucketNav-tab {
+  color: black;
+  background-color: white;
+  list-style: none;
+}

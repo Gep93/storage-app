@@ -12,7 +12,7 @@ const BucketDetails = (props) => {
         <dt>Location</dt>
         <dd>{location.name}</dd>
         <dt>Storage size</dt>
-        <dd>4.9 GB</dd>
+        <dd>{props.bucketsize}</dd>
       </dl>
     </div>
   );
