@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <div className="App-banner">Secure cloud storage</div>
       <Route exact path="/" render={() => <BucketList />} />
-      <Route exact path="/bucket" render={() => <Bucket />} />
+      <Route exact path="/bucket/:id" render={() => <Bucket />} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import BucketTable from "../BucketTable/index";
+import BucketListTable from "../BucketListTable/index";
 import BucketCreate from "../BucketCreate/index";
 
 import axios from "axios";
@@ -55,7 +55,7 @@ class BucketList extends Component {
         {creatingbucket && (
           <BucketCreate handleBucketCreate={this.handleBucketCreate} />
         )}
-        <BucketTable
+        <BucketListTable
           creatingBucket={creatingbucket}
           newBucket={this.handleNewBucket}
           buckets={buckets}

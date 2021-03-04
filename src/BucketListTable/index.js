@@ -4,12 +4,12 @@ import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";
 import Button from "react-bootstrap/Button";
 
-const BucketTable = (props) => {
+const BucketListTable = (props) => {
   const { creatingbucket, buckets } = props;
 
   return (
-    <div className="BucketTable p-3 mt-2">
-      <div className="BucketTable-options mb-3">
+    <div className="BucketListTable p-3 mt-2">
+      <div className="BucketListTable-options mb-3">
         <span>All Buckets ({buckets.length})</span>
         <Button
           onClick={props.newBucket}
@@ -20,7 +20,7 @@ const BucketTable = (props) => {
         </Button>
       </div>
       <table>
-        <thead className="BucketTable-thead">
+        <thead className="BucketListTable-thead">
           <tr>
             <th style={{ width: "70%" }}>Name</th>
             <th style={{ width: "30%" }}>Location</th>
@@ -29,9 +29,12 @@ const BucketTable = (props) => {
         <tbody>
           {buckets.map((b) => {
             return (
-              <tr className="BucketTable-tr" key={b.id}>
+              <tr className="BucketListTable-tr" key={b.id}>
                 <td style={{ width: "70%" }}>
-                  <Link className="BucketTable-navLink" to="/bucket">
+                  <Link
+                    className="BucketListTable-navLink"
+                    to={`/bucket/${b.id}`}
+                  >
                     {b.name}
                   </Link>
                 </td>
@@ -45,4 +48,4 @@ const BucketTable = (props) => {
   );
 };
 
-export default BucketTable;
+export default BucketListTable;
