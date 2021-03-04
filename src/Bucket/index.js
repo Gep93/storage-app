@@ -4,11 +4,14 @@ import "./index.css";
 import BucketTable from "./../BucketTable/index";
 import BucketOptions from "../BucketOptions/index";
 import Tab from "../Tab/index";
+import BucketDetails from "./../BucketDetails/index";
 
 class Bucket extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
+      bucket: props.location.state.bucket,
       bucketobjects: [],
       renderfiles: true,
     };
@@ -67,7 +70,7 @@ class Bucket extends Component {
             <BucketTable objects={this.objects} />
           </>
         ) : (
-          console.log("<BucketDetails />")
+          <BucketDetails bucket={this.state.bucket} />
         )}
       </div>
     );

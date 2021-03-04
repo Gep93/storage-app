@@ -1,0 +1,21 @@
+.BucketDetails {
+  min-height: 15vw;
+  background-color: white;
+}
+
+.BucketDetails-dataList dd {
+  display: block;
+}
+
+.BucketDetails-dataList dt {
+  width: 150px;
+  display: block;
+  float: left;
+  text-align: right;
+  font-weight: normal;
+}
+
+.BucketDetails-dataList dt::after {
+  content: ":";
+  margin-right: 30px;
+}
