@@ -3,15 +3,20 @@ import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";
 import BucketTable from "./../BucketTable/index";
 import BucketOptions from "../BucketOptions/index";
+import Tab from "../Tab/index";
 
 class Bucket extends Component {
   constructor(props) {
     super(props);
     this.state = {
       bucketobjects: [],
+      renderfiles: true,
     };
 
+    this.handleRenderTab = this.handleRenderTab.bind(this);
     this.getFileList = this.getFileList.bind(this);
+    this.renderFiles = this.renderFiles.bind(this);
+    this.renderDetails = this.renderDetails.bind(this);
   }
 
   objects = [
@@ -23,15 +28,47 @@ class Bucket extends Component {
     console.log("evet", evt.target.files[0]);
   }
 
+  labels = [
+    { name: "Files", render: "BucketTable" },
+    { name: "Details", render: "BucketDetails" },
+  ];
+
+  handleRenderTab(evt) {
+    console.log(evt.target);
+  }
+
+  renderFiles(evt) {
+    this.setState({ renderfiles: true });
+  }
+
+  renderDetails(evt) {
+    this.setState({ renderfiles: false });
+  }
   render() {
     return (
       <div className="Bucket p-3">
         <h1>MyBucket</h1>
-        <BucketOptions
-          objectsnum={this.objects.length}
-          getFileList={this.getFileList}
+        <Tab
+          onClick={this.renderFiles}
+          name="Files"
+          active={this.state.renderfiles}
         />
-        <BucketTable objects={this.objects} />
+        <Tab
+          onClick={this.renderDetails}
+          name="Details "
+          active={!this.state.renderfiles}
+        />
+        {this.state.renderfiles ? (
+          <>
+            <BucketOptions
+              objectsnum={this.objects.length}
+              getFileList={this.getFileList}
+            />
+            <BucketTable objects={this.objects} />
+          </>
+        ) : (
+          console.log("<BucketDetails />")
+        )}
       </div>
     );
   }

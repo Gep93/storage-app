@@ -1,0 +1,9 @@
+.Tab {
+  color: black;
+  background-color: white;
+  list-style: none;
+}
+
+.Tab-selected {
+  background-color: #cccccc;
+}
