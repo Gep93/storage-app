@@ -1,38 +1,38 @@
-.BucketTable {
+.BucketListTable {
   background-color: white;
 }
 
-.BucketTable-options {
+.BucketListTable-options {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.BucketTable-hidden {
+.BucketListTable-hidden {
   visibility: hidden;
 }
 
-.BucketTable table {
+.BucketListTable table {
   width: 100%;
   border: 0.3vw solid black;
   text-align: left;
 }
 
-.BucketTable thead {
+.BucketListTable thead {
   background-color: #cccccc;
   border: 0.3vw solid black;
 }
 
-.BucketTable-tr:hover {
+.BucketListTable-tr:hover {
   background-color: #cccccc;
 }
 
-.BucketTable-navLink {
+.BucketListTable-navLink {
   color: black;
   text-decoration: none;
 }
 
-.BucketTable-navLink:hover {
+.BucketListTable-navLink:hover {
   cursor: pointer;
   color: black;
   text-decoration: none;
