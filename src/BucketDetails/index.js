@@ -8,7 +8,7 @@ const BucketDetails = (props) => {
   return (
     <div className="BucketDetails p-3">
       <Button
-        onClick={props.handleDelete}
+        onClick={props.deleteBucket}
         className="BucketDetails-button mt-3"
         variant="danger"
       >

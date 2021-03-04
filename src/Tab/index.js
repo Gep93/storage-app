@@ -4,12 +4,12 @@ import "./index.css";
 
 const Tab = (props) => {
   return (
-    <span
+    <div
       onClick={props.onClick}
       className={`Tab px-4 py-3 ${props.active && "Tab-selected"}`}
     >
       {props.name}
-    </span>
+    </div>
   );
 };
 

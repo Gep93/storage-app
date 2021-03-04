@@ -9,3 +9,14 @@
   background-color: #666666;
   color: white;
 }
+
+.App-link {
+  color: white;
+  text-decoration: none;
+}
+
+.App-link:hover {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}

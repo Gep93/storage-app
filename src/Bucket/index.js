@@ -3,26 +3,34 @@ import BucketTable from "./../BucketTable/index";
 import BucketOptions from "../BucketOptions/index";
 import Tab from "../Tab/index";
 import BucketDetails from "./../BucketDetails/index";
+import DecisionModal from "../DecisionModal/index";
 import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";
 import axios from "axios";
+
+import Button from "react-bootstrap/Button";
 
 const API_url = "https://challenge.3fs.si/storage/";
 
 class Bucket extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
+    console.log("PROPS", props);
     this.state = {
       bucket: props.location.state.bucket,
       bucketobjects: [],
       renderfiles: true,
+      openmodal: false,
     };
 
     this.handleRenderTab = this.handleRenderTab.bind(this);
     this.getFileList = this.getFileList.bind(this);
     this.renderFiles = this.renderFiles.bind(this);
     this.renderDetails = this.renderDetails.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
+    this.handleRejectDelete = this.handleRejectDelete.bind(this);
+    this.handleDeleteModal = this.handleDeleteModal.bind(this);
   }
 
   componentDidMount() {
@@ -37,7 +45,6 @@ class Bucket extends Component {
         },
       })
       .then((res) => {
-        console.log("data", res.data);
         let modifiedobjects = res.data.objects.map((o) => {
           const [year, month, day] = o.last_modified.split("T")[0].split("-");
           return { ...o, last_modified: `${day}.${month}.${year}` };
@@ -83,7 +90,17 @@ class Bucket extends Component {
   }
 
   handleDelete() {
-    console.log("Delete bucket");
+    axios
+      .delete(API_url + `buckets/${this.state.bucket.id}`, {
+        headers: {
+          Authorization: "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3",
+        },
+      })
+      .then((res) => {
+        console.log("RESONSE", res);
+        this.props.history.push("/");
+      })
+      .catch((err) => console.log(err));
   }
 
   renderFiles(evt) {
@@ -94,10 +111,23 @@ class Bucket extends Component {
     this.setState({ renderfiles: false });
   }
 
+  handleConfirmDelete(evt) {
+    const path = this.state.renderfiles ? "path" : "path2";
+    this.handleDelete(); //refaktoriziraj!
+  }
+
+  handleRejectDelete(evt) {
+    this.setState({ openmodal: false });
+  }
+
+  handleDeleteModal() {
+    this.setState({ openmodal: true });
+  }
+
   render() {
     return (
-      <div className="Bucket p-3">
-        <h1>MyBucket</h1>
+      <div className="Bucket mt-5">
+        <h1 className="mb-5">MyBucket</h1>
         <Tab
           onClick={this.renderFiles}
           name="Files"
@@ -124,9 +154,17 @@ class Bucket extends Component {
           <BucketDetails
             bucket={this.state.bucket}
             bucketsize={this.state.bucketsize}
-            deleteBucket={this.handleDelete}
+            // deleteBucket={this.handleDelete}
+            deleteBucket={this.handleDeleteModal}
           />
         )}
+
+        <DecisionModal
+          isOpen={this.state.openmodal}
+          item={this.state.renderfiles ? "file" : "bucket"}
+          confirmDelete={this.handleConfirmDelete}
+          rejectDelete={this.handleRejectDelete}
+        />
       </div>
     );
   }

@@ -50,8 +50,8 @@ class BucketList extends Component {
   render() {
     let { creatingbucket, buckets } = this.state;
     return (
-      <div className="BucketList p-3">
-        <h1>Bucket List</h1>
+      <div className="BucketList mt-5">
+        <h1 className="mb-5">Bucket List</h1>
         {creatingbucket && (
           <BucketCreate handleBucketCreate={this.handleBucketCreate} />
         )}

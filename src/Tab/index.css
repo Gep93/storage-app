@@ -1,9 +1,10 @@
 .Tab {
+  display: inline-block;
   color: black;
-  background-color: white;
+  background-color: #cccccc;
   list-style: none;
 }
 
 .Tab-selected {
-  background-color: #cccccc;
+  background-color: white;
 }

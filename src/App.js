@@ -1,12 +1,16 @@
 import BucketList from "./BucketList/index";
 import "./App.css";
 import Bucket from "./Bucket/index";
-import { Route } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      <div className="App-banner">Secure cloud storage</div>
+      <div className="App-banner">
+        <Link to="/" className="App-link">
+          Secure cloud storage
+        </Link>
+      </div>
       <Route exact path="/" render={() => <BucketList />} />
       <Route
         exact
