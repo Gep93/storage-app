@@ -1,0 +1,28 @@
+.Decision {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Decision-box {
+  width: 50%;
+  max-width: 550px;
+  background-color: lightgray;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: solid black thin;
+  padding: 40px;
+}
+
+.Decision-row {
+  margin-bottom: 10px;
+}
+
+.Decision-button {
+  margin-top: 10px;
+  margin-right: 10px;
+}
