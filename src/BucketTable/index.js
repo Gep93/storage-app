@@ -3,9 +3,10 @@ import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";
 
-const BucketTable = () => {
+const BucketTable = (props) => {
+  const { objects } = props;
   return (
-    <div className="BucketTable p-3 mt-2">
+    <div className="BucketTable p-3">
       <table>
         <thead className="BucketTable-thead">
           <tr>
@@ -15,11 +16,15 @@ const BucketTable = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>FileName1</td>
-            <td>06.09.2015</td>
-            <td>2MB</td>
-          </tr>
+          {objects.map((o) => {
+            return (
+              <tr>
+                <td>{o.name}</td>
+                <td>{o.last_modified}</td>
+                <td>{o.size}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
