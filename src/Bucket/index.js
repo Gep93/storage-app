@@ -46,8 +46,13 @@ class Bucket extends Component {
       })
       .then((res) => {
         let modifiedobjects = res.data.objects.map((o) => {
-          const [year, month, day] = o.last_modified.split("T")[0].split("-");
-          return { ...o, last_modified: `${day}.${month}.${year}` };
+          console.log("LAST mod BEFORE", o.last_modified);
+
+          console.log("LAST mod AFTER", {
+            ...o,
+            last_modified: this.formatDate(o.last_modified),
+          });
+          return { ...o, last_modified: this.formatDate(o.last_modified) };
         });
 
         let bytes = this.sumProperty(res.data.objects, "size");
@@ -55,6 +60,41 @@ class Bucket extends Component {
         this.setState({ bucketobjects: modifiedobjects, bucketsize });
       })
       .catch((err) => console.log(err));
+  }
+  uploadObjects(file) {
+    console.log(file);
+    let fd = new FormData();
+    fd.append("file", file);
+    fd.append("id", "test");
+    console.log("file name", file.name);
+    console.log("file last", file.lastModified);
+    console.log("file size", file.size);
+    console.log("FD", fd);
+    // ${this.state.bucket.id}
+    axios
+      .post(API_url + `buckets/bucket1/objects`, fd, {
+        headers: {
+          Authorization: "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3",
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        this.setState((prevState) => {
+          let newbucketobject = {
+            ...res.data,
+            last_modified: this.formatDate(res.data.last_modified),
+          };
+          let newbucketobjects = [newbucketobject, ...prevState.bucketobjects];
+          return { bucketobjects: newbucketobjects };
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  formatDate(date) {
+    const [year, month, day] = date.split("T")[0].split("-");
+    return `${day}.${month}.${year}`;
   }
 
   sumProperty(items, prop) {
@@ -77,7 +117,8 @@ class Bucket extends Component {
   }
 
   getFileList(evt) {
-    console.log("evet", evt.target.files[0]);
+    // console.log("evet", evt.target.files[0]);
+    this.uploadObjects(evt.target.files[0]);
   }
 
   labels = [
