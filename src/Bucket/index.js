@@ -20,7 +20,7 @@ class Bucket extends Component {
       bucket: props.location.state.bucket,
       bucketobjects: [],
       renderfiles: true,
-      openmodal: false,
+      modalisopen: false,
     };
 
     this.handleRenderTab = this.handleRenderTab.bind(this);
@@ -131,8 +131,12 @@ class Bucket extends Component {
   }
 
   handleDelete() {
+    const path =
+      "/" + this.state.renderfiles
+        ? "file ID"
+        : `objects/${this.state.bucket.id}`;
     axios
-      .delete(API_url + `buckets/${this.state.bucket.id}`, {
+      .delete(API_url + `buckets/${this.state.bucket.id}${path}`, {
         headers: {
           Authorization: "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3",
         },
@@ -154,15 +158,17 @@ class Bucket extends Component {
 
   handleConfirmDelete(evt) {
     const path = this.state.renderfiles ? "path" : "path2";
-    this.handleDelete(); //refaktoriziraj!
+    if (this.state.renderfiles) return this.handleDelete();
+    // this.setState({objectid: evt.target.name})
+    console.log(evt.target);
   }
 
   handleRejectDelete(evt) {
-    this.setState({ openmodal: false });
+    this.setState({ modalisopen: false });
   }
 
   handleDeleteModal() {
-    this.setState({ openmodal: true });
+    this.setState({ modalisopen: true });
   }
 
   render() {
@@ -189,7 +195,11 @@ class Bucket extends Component {
               }
               getFileList={this.getFileList}
             />
-            <BucketTable objects={this.state.bucketobjects} />
+            <BucketTable
+              objects={this.state.bucketobjects}
+              canClick
+              clickHandler={this.handleDeleteModal}
+            />
           </>
         ) : (
           <BucketDetails

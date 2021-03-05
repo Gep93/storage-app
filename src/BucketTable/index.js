@@ -5,6 +5,9 @@ import "./index.css";
 
 const BucketTable = (props) => {
   const { objects } = props;
+  const handleClick = (evt) => {
+    props.canClick && props.clickHandler(evt);
+  };
   return (
     <div className="BucketTable p-3">
       <table>
@@ -18,7 +21,10 @@ const BucketTable = (props) => {
         <tbody>
           {objects.map((o) => {
             return (
-              <tr>
+              <tr
+                {...(props.canClick && { onClick: handleClick })}
+                key={o.name}
+              >
                 <td>{o.name}</td>
                 <td>{o.last_modified}</td>
                 <td>{o.size}</td>
