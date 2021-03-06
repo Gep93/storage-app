@@ -21,10 +21,8 @@ const BucketTable = (props) => {
         <tbody>
           {objects.map((o) => {
             return (
-              <tr
-                {...(props.canClick && { onClick: handleClick })}
-                key={o.name}
-              >
+              <tr key={o.name} {...(props.canClick && { onClick: handleClick })}
+              id={o.name}>
                 <td>{o.name}</td>
                 <td>{o.last_modified}</td>
                 <td>{o.size}</td>

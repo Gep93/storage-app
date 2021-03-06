@@ -65,12 +65,6 @@ class Bucket extends Component {
     console.log(file);
     let fd = new FormData();
     fd.append("file", file);
-    fd.append("id", "test");
-    console.log("file name", file.name);
-    console.log("file last", file.lastModified);
-    console.log("file size", file.size);
-    console.log("FD", fd);
-    // ${this.state.bucket.id}
     axios
       .post(API_url + `buckets/bucket1/objects`, fd, {
         headers: {
@@ -167,7 +161,9 @@ class Bucket extends Component {
     this.setState({ modalisopen: false });
   }
 
-  handleDeleteModal() {
+  handleDeleteModal(evt) {
+    console.log("delete modal",evt.target)
+    console.log("delete modal ID",evt.target)
     this.setState({ modalisopen: true });
   }
 
@@ -197,7 +193,7 @@ class Bucket extends Component {
             />
             <BucketTable
               objects={this.state.bucketobjects}
-              canClick
+              canClick={true}
               clickHandler={this.handleDeleteModal}
             />
           </>
