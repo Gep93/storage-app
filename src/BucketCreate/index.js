@@ -1,10 +1,9 @@
 import React, { Component } from "react";
+import { Button } from "react-bootstrap";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { Button } from "react-bootstrap";
-import axios from "axios";
 
-const API = "https://challenge.3fs.si/storage/";
+import http, {API_url, API_token} from "../services/httpServices";
 
 class BucketCreate extends Component {
   constructor(props) {
@@ -20,10 +19,10 @@ class BucketCreate extends Component {
   }
 
   componentDidMount() {
-    axios
-      .get(API + "locations", {
+    http
+      .get(API_url + "locations", {
         headers: {
-          Authorization: "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3",
+          Authorization: API_token,
         },
       })
       .then((res) => this.updateBucketLocations(res))
@@ -48,10 +47,10 @@ class BucketCreate extends Component {
       location: this.state.bucketlocation,
     });
 
-    axios
-      .post(API + "buckets", data, {
+    http
+      .post(API_url + "buckets", data, {
         headers: {
-          Authorization: "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3",
+          Authorization: API_token,
         },
       })
       .then((res) => {

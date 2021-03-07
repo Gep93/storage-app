@@ -6,11 +6,7 @@ import BucketDetails from "./../BucketDetails/index";
 import DecisionModal from "../DecisionModal/index";
 import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";
-import axios from "axios";
-
-import Button from "react-bootstrap/Button";
-
-const API_url = "https://challenge.3fs.si/storage/";
+import http, {API_url, API_token} from "../services/httpServices";
 
 class Bucket extends Component {
   constructor(props) {
@@ -41,10 +37,10 @@ class Bucket extends Component {
   }
 
   fetchObjects() {
-    axios
+    http
       .get(API_url + `buckets/${this.state.bucket.id}/objects`, {
         headers: {
-          Authorization: "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3",
+          Authorization: API_token,
         },
       })
       .then((res) => {
@@ -61,10 +57,10 @@ class Bucket extends Component {
   uploadObjects(file) {
     let fd = new FormData();
     fd.append("file", file);
-    axios
+    http
       .post(API_url + `buckets/bucket1/objects`, fd, {
         headers: {
-          Authorization: "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3",
+          Authorization: API_token,
           "Content-Type": "multipart/form-data",
         },
       })
@@ -108,7 +104,6 @@ class Bucket extends Component {
   }
 
   getFileList(evt) {
-    // console.log("evet", evt.target.files[0]);
     this.uploadObjects(evt.target.files[0]);
   }
 
@@ -122,24 +117,27 @@ class Bucket extends Component {
   }
 
   handleDelete() {
-    const path =this.state.renderfiles
-        ? `objects/${this.state.selectedobject}`
-        : this.state.bucket.id;
-        console.log(`buckets/${this.state.bucket.id}/${path}`);
-    axios
-      .delete(API_url + `buckets/${this.state.bucket.id}/${path}`, {
+    const path = this.state.renderfiles ? `/objects/${this.state.selectedobject}` : '';
+        console.log(`buckets/${this.state.bucket.id}${path}`);
+    http
+      .delete(API_url + `buckets/${this.state.bucket.id}${path}`, {
         headers: {
-          Authorization: "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3",
+          Authorization: API_token,
         },
       })
       .then((res) => {
-        const bucketobjects = this.state.bucketobjects.filter((o) => {
-          return o.name !== this.state.selectedobject;
-        })     ;      
-
-        let bytes = this.sumProperty(bucketobjects, "size");
-        let bucketsize = this.formatBytes(bytes);
-        this.setState({bucketobjects, openmodal:false, bucketsize});
+        if(this.renderfiles) {
+          const bucketobjects = this.state.bucketobjects.filter((o) => {
+            return o.name !== this.state.selectedobject;
+          })     ;      
+  
+          let bytes = this.sumProperty(bucketobjects, "size");
+          let bucketsize = this.formatBytes(bytes);
+          this.setState({bucketobjects, openmodal:false, bucketsize});
+        } else {
+          this.props.history.push('/');
+        }
+        
       })
       .catch((err) => console.log(err));
   }
@@ -153,9 +151,7 @@ class Bucket extends Component {
   }
 
   handleConfirmDelete(evt) {
-    const path = this.state.renderfiles ? "path" : "path2";
-    if (this.state.renderfiles) return this.handleDelete();
-    // this.setState({objectid: evt.target.name})
+    this.handleDelete();
   }
 
   handleRejectDelete(evt) {
@@ -173,7 +169,6 @@ class Bucket extends Component {
 
   deleteSelectedObject(){
     console.log("delete");
-    // if(this.selecte)
     if(this.state.selectedobject)
       this.handleDeleteModal();
   }
@@ -214,7 +209,6 @@ class Bucket extends Component {
           <BucketDetails
             bucket={this.state.bucket}
             bucketsize={this.state.bucketsize}
-            // deleteBucket={this.handleDelete}
             deleteBucket={this.handleDeleteModal}
           />
         )}

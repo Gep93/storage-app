@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import BucketListTable from "../BucketListTable/index";
 import BucketCreate from "../BucketCreate/index";
 
-import axios from "axios";
+import http, {API_url, API_token} from "../services/httpServices"
 import "./index.css";
-
-const API_url = "https://challenge.3fs.si/storage/";
 
 class BucketList extends Component {
   constructor(props) {
@@ -25,10 +23,10 @@ class BucketList extends Component {
   }
 
   fetchBuckets() {
-    axios
+    http
       .get(API_url + "buckets", {
         headers: {
-          Authorization: "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3",
+          Authorization: API_token,
         },
       })
       .then((res) => {
