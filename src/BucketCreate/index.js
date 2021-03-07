@@ -12,6 +12,7 @@ class BucketCreate extends Component {
       bucketname: "",
       bucketlocation: "",
       bucketlocations: [],
+      cancreate: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -29,11 +30,14 @@ class BucketCreate extends Component {
   }
 
   handleChange(evt) {
-    this.setState({ [evt.target.name]: evt.target.value });
+    const cancreate = evt.target.value ? true : false;
+    this.setState({ [evt.target.name]: evt.target.value, cancreate });
   }
 
   async handleSubmit(evt) {
     evt.preventDefault();
+    if(!this.state.cancreate)
+      return;
 
     const data = JSON.stringify({
       name: this.state.bucketname,
@@ -54,7 +58,7 @@ class BucketCreate extends Component {
   }
 
   render() {
-    const { bucketname, bucketlocation, bucketlocations } = this.state;
+    const { bucketname, cancreate, bucketlocations } = this.state;
     return (
       <div className="BucketCreate p-3 mb-2 mt-5">
         <form onSubmit={this.handleSubmit} className="BucketCreate-form">
@@ -98,7 +102,7 @@ class BucketCreate extends Component {
               </select>
             </div>
           </div>
-          <Button className="mt-3" variant="primary" type="submit">
+          <Button className="mt-3" variant="primary" type="submit" disabled={!cancreate}>
             Create Bucket
           </Button>{" "}
         </form>

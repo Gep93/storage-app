@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import "./index.css";
 
 const BucketOptions = (props) => {
-  const { objectsnum, getFileList } = props;
+  const { objectsnum } = props;
   const handleChange = (evt) => {
     props.getFileList(evt);
   };
