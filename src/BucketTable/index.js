@@ -1,15 +1,37 @@
 import React, { Component } from "react";
+import {useState, useEffect} from "react"
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";
 
 const BucketTable = (props) => {
-  const { objects } = props;
-  const handleClick = (evt) => {
-    props.canClick && props.clickHandler(evt);
+  const [bucketobjects, setObjects] = useState(props.objects);
+
+  useEffect(() => {
+    setObjects(props.objects);
+    console.log("CHANGING");
+  }, [props.objects], [bucketobjects])
+
+  const selectObject = (evt) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    const changeBg = bucketobjects.map((o) => {
+      return o.name === evt.currentTarget.id ? {...o, selected:!o.selected} : {...o, selected:false};
+    });
+    updateObject(evt.currentTarget.id);
+    setObjects(changeBg);
+  }
+
+  const updateObject = (id) => {
+    props.clickHandler(id)
   };
+
+  // const handleClick = (evt) => {
+  //   props.canClick && props.clickHandler(evt);
+  // };
   return (
     <div className="BucketTable p-3">
+      {console.log("rendering")}
       <table>
         <thead className="BucketTable-thead">
           <tr>
@@ -19,16 +41,19 @@ const BucketTable = (props) => {
           </tr>
         </thead>
         <tbody>
-          {objects.map((o) => {
+        {/* {...(props.canClick && { onClick: handleClick })} */}
+          {bucketobjects && bucketobjects.map((o) => {
             return (
-              <tr key={o.name} {...(props.canClick && { onClick: handleClick })}
-              id={o.name}>
+              <tr key={o.name} onClick={selectObject}
+              id={o.name} style={{...(o.selected && {backgroundColor: 'gray'})}}>
                 <td>{o.name}</td>
                 <td>{o.last_modified}</td>
                 <td>{o.size}</td>
               </tr>
             );
           })}
+          {!bucketobjects && <tr>
+            <td>No objects in bucket yet.</td></tr>}
         </tbody>
       </table>
     </div>

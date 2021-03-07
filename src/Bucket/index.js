@@ -15,12 +15,13 @@ const API_url = "https://challenge.3fs.si/storage/";
 class Bucket extends Component {
   constructor(props) {
     super(props);
-    console.log("PROPS", props);
     this.state = {
       bucket: props.location.state.bucket,
       bucketobjects: [],
+      selectedobject: '',
       renderfiles: true,
-      modalisopen: false,
+      openmodal: false,
+      bucketsize:0,
     };
 
     this.handleRenderTab = this.handleRenderTab.bind(this);
@@ -31,6 +32,8 @@ class Bucket extends Component {
     this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
     this.handleRejectDelete = this.handleRejectDelete.bind(this);
     this.handleDeleteModal = this.handleDeleteModal.bind(this);
+    this.updateSelectedObject = this.updateSelectedObject.bind(this);
+    this.deleteSelectedObject = this.deleteSelectedObject.bind(this);
   }
 
   componentDidMount() {
@@ -46,12 +49,6 @@ class Bucket extends Component {
       })
       .then((res) => {
         let modifiedobjects = res.data.objects.map((o) => {
-          console.log("LAST mod BEFORE", o.last_modified);
-
-          console.log("LAST mod AFTER", {
-            ...o,
-            last_modified: this.formatDate(o.last_modified),
-          });
           return { ...o, last_modified: this.formatDate(o.last_modified) };
         });
 
@@ -62,7 +59,6 @@ class Bucket extends Component {
       .catch((err) => console.log(err));
   }
   uploadObjects(file) {
-    console.log(file);
     let fd = new FormData();
     fd.append("file", file);
     axios
@@ -73,14 +69,17 @@ class Bucket extends Component {
         },
       })
       .then((res) => {
-        console.log(res.data);
         this.setState((prevState) => {
           let newbucketobject = {
             ...res.data,
             last_modified: this.formatDate(res.data.last_modified),
           };
           let newbucketobjects = [newbucketobject, ...prevState.bucketobjects];
-          return { bucketobjects: newbucketobjects };
+
+          let bytes = this.sumProperty(newbucketobjects, "size");
+          let bucketsize = this.formatBytes(bytes);
+
+          return { bucketobjects: newbucketobjects, bucketsize };
         });
       })
       .catch((err) => console.log(err));
@@ -93,8 +92,6 @@ class Bucket extends Component {
 
   sumProperty(items, prop) {
     return items.reduce((a, b) => {
-      console.log(a);
-      console.log(b);
       return a + b[prop];
     }, 0);
   }
@@ -125,19 +122,24 @@ class Bucket extends Component {
   }
 
   handleDelete() {
-    const path =
-      "/" + this.state.renderfiles
-        ? "file ID"
-        : `objects/${this.state.bucket.id}`;
+    const path =this.state.renderfiles
+        ? `objects/${this.state.selectedobject}`
+        : this.state.bucket.id;
+        console.log(`buckets/${this.state.bucket.id}/${path}`);
     axios
-      .delete(API_url + `buckets/${this.state.bucket.id}${path}`, {
+      .delete(API_url + `buckets/${this.state.bucket.id}/${path}`, {
         headers: {
           Authorization: "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3",
         },
       })
       .then((res) => {
-        console.log("RESONSE", res);
-        this.props.history.push("/");
+        const bucketobjects = this.state.bucketobjects.filter((o) => {
+          return o.name !== this.state.selectedobject;
+        })     ;      
+
+        let bytes = this.sumProperty(bucketobjects, "size");
+        let bucketsize = this.formatBytes(bytes);
+        this.setState({bucketobjects, openmodal:false, bucketsize});
       })
       .catch((err) => console.log(err));
   }
@@ -154,17 +156,26 @@ class Bucket extends Component {
     const path = this.state.renderfiles ? "path" : "path2";
     if (this.state.renderfiles) return this.handleDelete();
     // this.setState({objectid: evt.target.name})
-    console.log(evt.target);
   }
 
   handleRejectDelete(evt) {
-    this.setState({ modalisopen: false });
+    this.setState({ openmodal: false });
   }
 
   handleDeleteModal(evt) {
-    console.log("delete modal",evt.target)
-    console.log("delete modal ID",evt.target)
-    this.setState({ modalisopen: true });
+    this.setState({ openmodal: true });
+  }
+
+  updateSelectedObject(id) {
+    console.log(id);
+    this.setState({selectedobject: id});
+  }
+
+  deleteSelectedObject(){
+    console.log("delete");
+    // if(this.selecte)
+    if(this.state.selectedobject)
+      this.handleDeleteModal();
   }
 
   render() {
@@ -190,11 +201,13 @@ class Bucket extends Component {
                   : 0
               }
               getFileList={this.getFileList}
+              disabled = {this.state.selectedobject ? true : false}
+              deleteObject={this.deleteSelectedObject}
             />
             <BucketTable
               objects={this.state.bucketobjects}
               canClick={true}
-              clickHandler={this.handleDeleteModal}
+              clickHandler={this.updateSelectedObject}
             />
           </>
         ) : (

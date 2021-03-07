@@ -14,7 +14,8 @@ const BucketOptions = (props) => {
       <span>All Files ({objectsnum})</span>
       <div>
         <Button
-          onClick={() => console.log("Delete Object")}
+          disabled = {!props.disabled}
+          onClick={props.deleteObject}
           variant="primary"
           className="mx-2"
         >
