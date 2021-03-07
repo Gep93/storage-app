@@ -6,6 +6,7 @@ import "./index.css";
 const DecisionModal = (props) => {
   return (
     <Modal
+      ariaHideApp={false}
       isOpen={props.isOpen}
       style={{
         overlay: { backgroundColor: "rgb(230, 230, 230, 0.4)" },
