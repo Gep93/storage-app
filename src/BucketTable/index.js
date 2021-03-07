@@ -8,7 +8,6 @@ const BucketTable = (props) => {
 
   useEffect(() => {
     setObjects(props.objects);
-    console.log("CHANGING");
   }, [props.objects], [bucketobjects])
 
   const selectObject = (evt) => {
@@ -27,7 +26,6 @@ const BucketTable = (props) => {
 
   return (
     <div className="BucketTable p-3">
-      {console.log("rendering")}
       <table>
         <thead className="BucketTable-thead">
           <tr>
@@ -39,8 +37,8 @@ const BucketTable = (props) => {
         <tbody>
           {bucketobjects && bucketobjects.map((o) => {
             return (
-              <tr key={o.name} onClick={selectObject}
-              id={o.name} style={{...(o.selected && {backgroundColor: 'gray'})}}>
+              <tr className="BucketTable-tr" key={o.name} onClick={selectObject}
+              id={o.name} style={{...(o.selected && {backgroundColor: '#cccccc'})}}>
                 <td>{o.name}</td>
                 <td>{o.last_modified}</td>
                 <td>{o.size}</td>
