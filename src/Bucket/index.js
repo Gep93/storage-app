@@ -45,7 +45,7 @@ class Bucket extends Component {
       });
       const bytes = sumProperty(response.data.objects, "size");
       const bucketsize = formatBytes(bytes);
-      
+
       this.setState({ bucketobjects, bucketsize });
   }
 
