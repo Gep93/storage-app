@@ -7,6 +7,7 @@ import DecisionModal from "../DecisionModal/index";
 import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";
 import http, {API_url, API_token} from "../services/httpServices";
+import {sumProperty, formatBytes, formatDate} from "../helpers.js";
 
 class Bucket extends Component {
   constructor(props) {
@@ -39,19 +40,19 @@ class Bucket extends Component {
         },
       });
 
-      let modifiedobjects = response.data.objects.map((o) => {
-        return { ...o, last_modified: this.formatDate(o.last_modified) };
+      const bucketobjects = response.data.objects.map((o) => {
+        return { ...o, last_modified: formatDate(o.last_modified) };
       });
-
-      let bytes = this.sumProperty(response.data.objects, "size");
-      let bucketsize = this.formatBytes(bytes);
-      this.setState({ bucketobjects: modifiedobjects, bucketsize });
+      const bytes = sumProperty(response.data.objects, "size");
+      const bucketsize = formatBytes(bytes);
+      
+      this.setState({ bucketobjects, bucketsize });
   }
 
-  async uploadObjects(file) {
+  async uploadObject(file) {
     const {id} = this.state.bucket;
 
-    let fd = new FormData();
+    const fd = new FormData();
     fd.append("file", file);
 
     try {
@@ -63,16 +64,15 @@ class Bucket extends Component {
         },
       });
       this.setState((prevState) => {
-        let newbucketobject = {
+        const bucketobject = {
           ...response.data,
-          last_modified: this.formatDate(response.data.last_modified),
+          last_modified: formatDate(response.data.last_modified),
         };
-        let newbucketobjects = [newbucketobject, ...prevState.bucketobjects];
+        const bucketobjects = [bucketobject, ...prevState.bucketobjects];
+        const bytes = sumProperty(bucketobjects, "size");
+        const bucketsize = formatBytes(bytes);
 
-        let bytes = this.sumProperty(newbucketobjects, "size");
-        let bucketsize = this.formatBytes(bytes);
-
-        return { bucketobjects: newbucketobjects, bucketsize };
+        return { bucketobjects, bucketsize };
       })
     } catch (error) {
       if(error.response && error.response.status === 409)
@@ -80,30 +80,8 @@ class Bucket extends Component {
     }
   }
 
-  formatDate(date) {
-    const [year, month, day] = date.split("T")[0].split("-");
-    return `${day}.${month}.${year}`;
-  }
-
-  sumProperty(items, prop) {
-    return items.reduce((a, b) => {
-      return a + b[prop];
-    }, 0);
-  }
-
-  formatBytes(a, b = 2) {
-    if (0 === a) return "0 Bytes";
-    const c = 0 > b ? 0 : b,
-      d = Math.floor(Math.log(a) / Math.log(1024));
-    return (
-      parseFloat((a / Math.pow(1024, d)).toFixed(c)) +
-      " " +
-      ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"][d]
-    );
-  }
-
   getFileList(evt) {
-    this.uploadObjects(evt.target.files[0]);
+    this.uploadObject(evt.target.files[0]);
   }
 
   labels = [
@@ -113,7 +91,6 @@ class Bucket extends Component {
 
   async handleDelete() {
     const path = this.state.renderfiles ? `/objects/${this.state.selectedobject}` : '';
-        console.log(`buckets/${this.state.bucket.id}${path}`);
 
     await http
       .delete(API_url + `buckets/${this.state.bucket.id}${path}`, {
@@ -127,8 +104,8 @@ class Bucket extends Component {
           return o.name !== this.state.selectedobject;
         });   
 
-        let bytes = this.sumProperty(bucketobjects, "size");
-        let bucketsize = this.formatBytes(bytes);
+        const bytes = sumProperty(bucketobjects, "size");
+        const bucketsize = formatBytes(bytes);
         this.setState({bucketobjects, openmodal:false, bucketsize});
       } else {
         this.props.history.push('/');
@@ -183,8 +160,6 @@ class Bucket extends Component {
             <BucketOptions
               objectsnum={
                 this.state.bucketobjects.length
-                  ? this.state.bucketobjects.length
-                  : 0
               }
               getFileList={this.getFileList}
               disabled = {this.state.selectedobject ? true : false}
