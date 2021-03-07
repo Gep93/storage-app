@@ -72,8 +72,8 @@ class Bucket extends Component {
         const bytes = sumProperty(bucketobjects, "size");
         const bucketsize = formatBytes(bytes);
 
-        return { bucketobjects, bucketsize };
-      })
+        return { bucketobjects, bucketsize, selectedobject: '' };
+      });
     } catch (error) {
       if(error.response && error.response.status === 409)
         alert(`Object with name: ${file.name} already exists.`);
@@ -135,6 +135,9 @@ class Bucket extends Component {
   updateSelectedObject(id) {
     if(this.state.selectedobject === id ) return this.setState({selectedobject: ''});
     this.setState({selectedobject: id});
+    // this.setState((prevState) => {
+    //   return prevState.selectedobject === id ?{selectedobject: ''} : {selectedobject: id};
+    // })
   }
 
   deleteSelectedObject(){

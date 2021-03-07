@@ -19,7 +19,7 @@ const BucketTable = (props) => {
   }
 
   const updateObject = (id) => {
-    props.clickHandler(id)
+    props.clickHandler(id);
   };
 
   return (
