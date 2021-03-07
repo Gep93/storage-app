@@ -22,8 +22,8 @@ class Bucket extends Component {
     };
 
     this.getFileList = this.getFileList.bind(this);
-    this.renderFiles = this.renderFiles.bind(this);
-    this.renderDetails = this.renderDetails.bind(this);
+    this.handleRenderFiles = this.handleRenderFiles.bind(this);
+    this.handleRenderDetails = this.handleRenderDetails.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
     this.handleRejectDelete = this.handleRejectDelete.bind(this);
@@ -112,27 +112,28 @@ class Bucket extends Component {
       }
   }
 
-  renderFiles(evt) {
+  handleRenderFiles() {
     this.setState({ renderfiles: true });
   }
 
-  renderDetails(evt) {
+  handleRenderDetails() {
     this.setState({ renderfiles: false });
   }
 
-  handleConfirmDelete(evt) {
+  handleConfirmDelete() {
     this.handleDelete();
   }
 
-  handleRejectDelete(evt) {
+  handleRejectDelete() {
     this.setState({ openmodal: false });
   }
 
-  handleDeleteModal(evt) {
+  handleDeleteModal() {
     this.setState({ openmodal: true });
   }
 
   updateSelectedObject(id) {
+    if(this.state.selectedobject === id ) return this.setState({selectedobject: ''});
     this.setState({selectedobject: id});
   }
 
@@ -142,31 +143,32 @@ class Bucket extends Component {
   }
 
   render() {
+    const {renderfiles, bucket, openmodal, selectedobject, bucketobjects, bucketsize} = this.state;
     return (
       <div className="Bucket mt-5">
-        <h1 className="mb-5">MyBucket</h1>
+        <h1 className="mb-5">{bucket.name}</h1>
         <Tab
-          onClick={this.renderFiles}
+          onClick={this.handleRenderFiles}
           name="Files"
-          active={this.state.renderfiles}
+          active={renderfiles}
         />
         <Tab
-          onClick={this.renderDetails}
+          onClick={this.handleRenderDetails}
           name="Details "
-          active={!this.state.renderfiles}
+          active={!renderfiles}
         />
-        {this.state.renderfiles ? (
+        {renderfiles ? (
           <>
             <BucketOptions
               objectsnum={
-                this.state.bucketobjects.length
+                bucketobjects.length
               }
               getFileList={this.getFileList}
-              disabled = {this.state.selectedobject ? true : false}
+              disabled = {selectedobject ? true : false}
               deleteObject={this.deleteSelectedObject}
             />
             <BucketTable
-              objects={this.state.bucketobjects}
+              objects={bucketobjects}
               canClick={true}
               clickHandler={this.updateSelectedObject}
             />
@@ -174,14 +176,14 @@ class Bucket extends Component {
         ) : (
           <BucketDetails
             bucket={this.state.bucket}
-            bucketsize={this.state.bucketsize}
+            bucketsize={bucketsize}
             deleteBucket={this.handleDeleteModal}
           />
         )}
 
         <DecisionModal
-          isOpen={this.state.openmodal}
-          item={this.state.renderfiles ? "file" : "bucket"}
+          isOpen={openmodal}
+          item={renderfiles ? "file" : "bucket"}
           confirmDelete={this.handleConfirmDelete}
           rejectDelete={this.handleRejectDelete}
         />

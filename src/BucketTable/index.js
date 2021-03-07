@@ -10,9 +10,7 @@ const BucketTable = (props) => {
     setObjects(props.objects);
   }, [props.objects], [bucketobjects])
 
-  const selectObject = (evt) => {
-    evt.preventDefault();
-    evt.stopPropagation();
+  const selectObject = (evt) => { 
     const changeBg = bucketobjects.map((o) => {
       return o.name === evt.currentTarget.id ? {...o, selected:!o.selected} : {...o, selected:false};
     });

@@ -34,7 +34,7 @@ const BucketListTable = (props) => {
                   <Link
                     className="BucketListTable-navLink"
                     to={{
-                      pathname: `/bucket/ ${b.id}`,
+                      pathname: `/bucket/${b.id}`,
 
                       state: { bucket: b },
                     }}

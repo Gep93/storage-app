@@ -31,7 +31,7 @@ class BucketList extends Component {
     this.setState({buckets:data.buckets});
   }
 
-  handleBucketCreate(el) {
+  handleBucketCreate() {
     this.setState({ creatingbucket: false });
     this.fetchBuckets();
   }

@@ -30,6 +30,8 @@
 .BucketListTable-navLink {
   color: black;
   text-decoration: none;
+  display: block;
+  width: 100%;
 }
 
 .BucketListTable-navLink:hover {
