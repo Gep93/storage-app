@@ -6,10 +6,11 @@ export const API_token = "Token 0d6d7282-2323-47f8-9686-28afa17e9ff3";
 axios.interceptors.response.use(null, error => {
     const expectedError = error.response && error.response.status >= 400 && error.response.status < 500;
 
-    if(!expectedError){
-        alert("An expected error has occured.");
+    if(!expectedError)
+        alert("An unexpected error has occured.");
         
-    return Promise.reject(error);}
+    return Promise.reject(error);
+
 });
 
 export default {

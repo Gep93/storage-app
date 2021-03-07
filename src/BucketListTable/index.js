@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.css";
-import "./index.css";
 import Button from "react-bootstrap/Button";
+import "./index.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 const BucketListTable = (props) => {
   const { creatingbucket, buckets } = props;

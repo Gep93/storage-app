@@ -18,53 +18,39 @@ class BucketCreate extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
-    http
-      .get(API_url + "locations", {
-        headers: {
-          Authorization: API_token,
-        },
-      })
-      .then((res) => this.updateBucketLocations(res))
-      .catch((err) => alert(err));
-  }
-
-  updateBucketLocations(res) {
-    const locations = res.data.locations;
-    const location = locations[0].id;
-    this.setState({ bucketlocations: locations, bucketlocation: location });
+  async componentDidMount() {
+    const {data:{locations}} = await http
+    .get(API_url + 'locations', {
+      headers: {
+        Authorization: API_token,
+      },
+    })
+    this.setState({bucketlocations: locations, bucketlocation: locations[0].id});
   }
 
   handleChange(evt) {
     this.setState({ [evt.target.name]: evt.target.value });
   }
 
-  handleSubmit(evt) {
+  async handleSubmit(evt) {
     evt.preventDefault();
 
     const data = JSON.stringify({
       name: this.state.bucketname,
       location: this.state.bucketlocation,
     });
-
-    http
+    try {
+      await http
       .post(API_url + "buckets", data, {
         headers: {
           Authorization: API_token,
         },
-      })
-      .then((res) => {
-        res.status === 201
-          ? this.handleBucketCreate()
-          : console.log("response", res);
-      })
-      .catch((err) => {
-        console.log(err);
       });
-  }
-
-  handleBucketCreate() {
-    this.props.handleBucketCreate();
+      this.props.handleBucketCreate();
+    } catch (error) {
+      if(error.response && error.response.status === 409)
+        alert(`Bucket with name: ${this.state.bucketname} already exists.`)
+    }
   }
 
   render() {

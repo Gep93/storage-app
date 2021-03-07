@@ -22,18 +22,13 @@ class BucketList extends Component {
     this.fetchBuckets();
   }
 
-  fetchBuckets() {
-    http
-      .get(API_url + "buckets", {
-        headers: {
-          Authorization: API_token,
-        },
-      })
-      .then((res) => {
-        console.log("data", res.data);
-        this.setState({ buckets: res.data.buckets });
-      })
-      .catch((err) => console.log(err));
+  async fetchBuckets() {
+    const {data} = await http.get(API_url + 'buckets', {
+      headers: {
+        Authorization: API_token
+      }
+    });
+    this.setState({buckets:data.buckets});
   }
 
   handleBucketCreate(el) {

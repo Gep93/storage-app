@@ -1,6 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
 import {useState, useEffect} from "react"
-import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";
 
@@ -26,9 +25,6 @@ const BucketTable = (props) => {
     props.clickHandler(id)
   };
 
-  // const handleClick = (evt) => {
-  //   props.canClick && props.clickHandler(evt);
-  // };
   return (
     <div className="BucketTable p-3">
       {console.log("rendering")}
@@ -41,7 +37,6 @@ const BucketTable = (props) => {
           </tr>
         </thead>
         <tbody>
-        {/* {...(props.canClick && { onClick: handleClick })} */}
           {bucketobjects && bucketobjects.map((o) => {
             return (
               <tr key={o.name} onClick={selectObject}

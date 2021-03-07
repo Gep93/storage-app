@@ -20,7 +20,6 @@ class Bucket extends Component {
       bucketsize:0,
     };
 
-    this.handleRenderTab = this.handleRenderTab.bind(this);
     this.getFileList = this.getFileList.bind(this);
     this.renderFiles = this.renderFiles.bind(this);
     this.renderDetails = this.renderDetails.bind(this);
@@ -32,53 +31,53 @@ class Bucket extends Component {
     this.deleteSelectedObject = this.deleteSelectedObject.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchObjects();
-  }
-
-  fetchObjects() {
-    http
+  async componentDidMount() {
+      const response = await http
       .get(API_url + `buckets/${this.state.bucket.id}/objects`, {
         headers: {
           Authorization: API_token,
         },
-      })
-      .then((res) => {
-        let modifiedobjects = res.data.objects.map((o) => {
-          return { ...o, last_modified: this.formatDate(o.last_modified) };
-        });
+      });
 
-        let bytes = this.sumProperty(res.data.objects, "size");
-        let bucketsize = this.formatBytes(bytes);
-        this.setState({ bucketobjects: modifiedobjects, bucketsize });
-      })
-      .catch((err) => console.log(err));
+      let modifiedobjects = response.data.objects.map((o) => {
+        return { ...o, last_modified: this.formatDate(o.last_modified) };
+      });
+
+      let bytes = this.sumProperty(response.data.objects, "size");
+      let bucketsize = this.formatBytes(bytes);
+      this.setState({ bucketobjects: modifiedobjects, bucketsize });
   }
-  uploadObjects(file) {
+
+  async uploadObjects(file) {
+    const {id} = this.state.bucket;
+
     let fd = new FormData();
     fd.append("file", file);
-    http
-      .post(API_url + `buckets/bucket1/objects`, fd, {
+
+    try {
+      const response = await http
+      .post(API_url + `buckets/${id}/objects`, fd, {
         headers: {
           Authorization: API_token,
           "Content-Type": "multipart/form-data",
         },
-      })
-      .then((res) => {
-        this.setState((prevState) => {
-          let newbucketobject = {
-            ...res.data,
-            last_modified: this.formatDate(res.data.last_modified),
-          };
-          let newbucketobjects = [newbucketobject, ...prevState.bucketobjects];
+      });
+      this.setState((prevState) => {
+        let newbucketobject = {
+          ...response.data,
+          last_modified: this.formatDate(response.data.last_modified),
+        };
+        let newbucketobjects = [newbucketobject, ...prevState.bucketobjects];
 
-          let bytes = this.sumProperty(newbucketobjects, "size");
-          let bucketsize = this.formatBytes(bytes);
+        let bytes = this.sumProperty(newbucketobjects, "size");
+        let bucketsize = this.formatBytes(bytes);
 
-          return { bucketobjects: newbucketobjects, bucketsize };
-        });
+        return { bucketobjects: newbucketobjects, bucketsize };
       })
-      .catch((err) => console.log(err));
+    } catch (error) {
+      if(error.response && error.response.status === 409)
+        alert(`Object with name: ${file.name} already exists.`);
+    }
   }
 
   formatDate(date) {
@@ -112,34 +111,28 @@ class Bucket extends Component {
     { name: "Details", render: "BucketDetails" },
   ];
 
-  handleRenderTab(evt) {
-    console.log(evt.target);
-  }
-
-  handleDelete() {
+  async handleDelete() {
     const path = this.state.renderfiles ? `/objects/${this.state.selectedobject}` : '';
         console.log(`buckets/${this.state.bucket.id}${path}`);
-    http
+
+    await http
       .delete(API_url + `buckets/${this.state.bucket.id}${path}`, {
         headers: {
           Authorization: API_token,
         },
       })
-      .then((res) => {
-        if(this.renderfiles) {
-          const bucketobjects = this.state.bucketobjects.filter((o) => {
-            return o.name !== this.state.selectedobject;
-          })     ;      
-  
-          let bytes = this.sumProperty(bucketobjects, "size");
-          let bucketsize = this.formatBytes(bytes);
-          this.setState({bucketobjects, openmodal:false, bucketsize});
-        } else {
-          this.props.history.push('/');
-        }
-        
-      })
-      .catch((err) => console.log(err));
+
+      if(this.state.renderfiles) {
+        const bucketobjects = this.state.bucketobjects.filter((o) => {
+          return o.name !== this.state.selectedobject;
+        });   
+
+        let bytes = this.sumProperty(bucketobjects, "size");
+        let bucketsize = this.formatBytes(bytes);
+        this.setState({bucketobjects, openmodal:false, bucketsize});
+      } else {
+        this.props.history.push('/');
+      }
   }
 
   renderFiles(evt) {
@@ -163,12 +156,10 @@ class Bucket extends Component {
   }
 
   updateSelectedObject(id) {
-    console.log(id);
     this.setState({selectedobject: id});
   }
 
   deleteSelectedObject(){
-    console.log("delete");
     if(this.state.selectedobject)
       this.handleDeleteModal();
   }
